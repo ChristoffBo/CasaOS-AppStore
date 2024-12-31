@@ -1,0 +1,115 @@
+name: zerotiercontroller
+services:
+  postgres:
+    cpu_shares: 90
+    command: []
+    container_name: postgres
+    deploy:
+      resources:
+        limits:
+          memory: 8188M
+    environment:
+      - POSTGRES_DB=ztnet
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_USER=postgres
+    hostname: postgres
+    image: postgres:15.2-alpine
+    labels:
+      icon: https://repository-images.githubusercontent.com/619295919/4f5b78ec-2a51-48bd-a45b-ca954812ad9f
+    ports:
+      - target: 5432
+        published: "5432"
+        protocol: ""
+    restart: unless-stopped
+    volumes:
+      - type: bind
+        source: /DATA/AppData/postgress
+        target: /var/lib/postgresql/data
+    devices: []
+    cap_add: []
+    network_mode: bridge
+    privileged: false
+  zerotier:
+    cap_add:
+      - NET_ADMIN
+      - SYS_ADMIN
+    cpu_shares: 90
+    command: []
+    container_name: zerotier
+    deploy:
+      resources:
+        limits:
+          memory: 8188M
+    devices:
+      - /dev/net/tun:/dev/net/tun
+    environment:
+      - ZT_ALLOW_MANAGEMENT_FROM=10.0.0.0/8,10.0.0.0/24, 0.0.0.0/0
+      - ZT_OVERRIDE_LOCAL_CONF=true
+    hostname: zerotier
+    image: zyclonite/zerotier:latest
+    labels:
+      icon: https://repository-images.githubusercontent.com/619295919/4f5b78ec-2a51-48bd-a45b-ca954812ad9f
+    ports:
+      - target: 9993
+        published: "9993"
+        protocol: udp
+    restart: unless-stopped
+    volumes:
+      - type: bind
+        source: /DATA/AppData/zerotier-one
+        target: /var/lib/zerotier-one
+    network_mode: host
+    privileged: false
+  ztnet:
+    cpu_shares: 90
+    command: []
+    container_name: ztnet
+    deploy:
+      resources:
+        limits:
+          memory: 8188M
+    environment:
+      - NEXTAUTH_SECRET=random_secret
+      - NEXTAUTH_URL=http://10.0.0.99:3000
+      - NEXTAUTH_URL_INTERNAL=http://10.0.0.99:3000
+      - POSTGRES_DB=ztnet
+      - POSTGRES_HOST=10.0.0.99
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_PORT=5432
+      - POSTGRES_USER=postgres
+    hostname: ztnet
+    image: sinamics/ztnet:latest
+    labels:
+      icon: https://repository-images.githubusercontent.com/619295919/4f5b78ec-2a51-48bd-a45b-ca954812ad9f
+    ports:
+      - target: 3000
+        published: "3000"
+        protocol: tcp
+    restart: unless-stopped
+    volumes:
+      - type: bind
+        source: /DATA/AppData/zerotier-one
+        target: /var/lib/zerotier-one
+    working_dir: /app
+    devices: []
+    cap_add: []
+    network_mode: bridge
+    privileged: false
+x-casaos:
+  author: self
+  category: self
+  hostname: ""
+  icon: https://repository-images.githubusercontent.com/619295919/4f5b78ec-2a51-48bd-a45b-ca954812ad9f
+  index: /
+  is_uncontrolled: false
+  port_map: "3000"
+  scheme: http
+  store_app_id: ZeroTierController
+  tips:
+    custom: |-
+      Username - cbothma
+      Email - notify@bothmainc.co.za
+      Password - Lilly@057!
+  title:
+    custom: ZeroTier Controller
+    en_us: postgres
