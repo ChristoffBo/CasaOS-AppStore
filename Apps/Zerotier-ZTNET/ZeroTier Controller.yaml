@@ -107,9 +107,9 @@ x-casaos:
   store_app_id: ZeroTierController
   tips:
     custom: |-
-      Username - cbothma
-      Email - notify@bothmainc.co.za
-      Password - Lilly@057!
+      Username - 
+      Email - 
+      Password - 
   title:
     custom: ZeroTier Controller
     en_us: postgres
