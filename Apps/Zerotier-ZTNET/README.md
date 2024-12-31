@@ -1,5 +1,5 @@
-# Altus
+# ZTNET
 
-An Electron-based WhatsApp client with themes and multiple account support.
+Zerotier controller with Gui.
 
 ---
